@@ -1,0 +1,12 @@
+.error {
+  display: flex;
+  height: 2rem;
+  min-width: 21rem;
+  align-items: center;
+  justify-content: center;
+  color: #ba3939;
+  background: #ffe0e0;
+  border: 1px solid #a33a3a;
+  border-radius: 0.2rem;
+  font-family: "Roboto";
+}
