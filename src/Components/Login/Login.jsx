@@ -1,15 +1,12 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import classes from "./Login.module.css";
 import ErrorMsg from "../ErrorMsg/ErrorMsg";
-import { userContext } from "../../Context/UserContext";
 import { useNavigate } from "react-router-dom";
 
-const Login = (props) => {
+const Login = ({ onLogin }) => {
   const emailRef = useRef(null);
   const navigateTo = useNavigate();
-
-  const { setUserState } = useContext(userContext);
 
   const [state, setState] = useState({
     users: [],
@@ -33,7 +30,6 @@ const Login = (props) => {
 
   const checkEmail = async (event) => {
     event.preventDefault();
-    console.log(state.users);
     try {
       const verifiedUser = state.users.find(
         (user) =>
@@ -42,16 +38,9 @@ const Login = (props) => {
       if (verifiedUser === undefined) {
         throw new Error("Incorrect Email Address");
       }
-      localStorage.user = JSON.stringify(verifiedUser);
-      localStorage.loggedStatues = JSON.stringify(true)
-      setUserState({
-        userInfo: verifiedUser,
-        isLoggedIn: true,
-      });
-      console.log(verifiedUser);
+      onLogin(verifiedUser);
       navigateTo("/albums/");
     } catch (err) {
-      console.log(err);
       setState({
         ...state,
         error: err.message,

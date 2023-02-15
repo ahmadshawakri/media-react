@@ -4,8 +4,11 @@ import { userContext } from "./Context/UserContext";
 
 const Protected = () => {
   const { userState } = useContext(userContext);
+  const { isLoggedIn } = userState;
+  const {userInfo} = userState
+  console.log(`userInfo: ${userInfo}`);
 
-  return userState.isLoggedIn ? <Outlet /> : <Navigate to={"/"} />;
+  return isLoggedIn ? <Outlet /> : <Navigate to={"/"} />;
 };
 
 export default Protected;

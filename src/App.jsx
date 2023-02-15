@@ -9,24 +9,44 @@ import { Route, Routes } from "react-router-dom";
 function App() {
   const [userState, setUserState] = useState({
     userInfo: [],
-    isLoggedIn: false,
+    isLoggedIn: true,
   });
 
   useEffect(() => {
-    try {
-      const user = JSON.parse(localStorage.user);
-      const loggedStatues = JSON.parse(localStorage.loggedStatues);
-      setUserState({
-        userInfo: user,
-        isLoggedIn: loggedStatues,
-      });
-    } catch (error) {}
+    if (!userState.isLoggedIn) {
+      setUserFromLocalStorage();
+    }
+    console.log(`isLoggedIn: ${userState.isLoggedIn}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const setUserFromLocalStorage = () => {
+    try {
+      const user = JSON.parse(localStorage.user);
+      const isLoggedIn = localStorage.isLoggedIn === "true";
+      setUserState({
+        userInfo: user,
+        isLoggedIn: isLoggedIn,
+      });
+    } catch (error) {}
+  };
+
+  const handleLogin = async (user) => {
+    localStorage.user = JSON.stringify(user);
+    localStorage.isLoggedIn = true;
+    console.log(user);
+    
+    await setUserState({
+      userInfo: user,
+      isLoggedIn: true,
+    }); // await setUserFromLocalStorage();
+    // await console.log(`isLoggedIn: ${userState.isLoggedIn}`);
+  };
+
   return (
-    <userContext.Provider value={{ userState, setUserState }}>
+    <userContext.Provider value={{ userState }}>
       <Routes>
-        <Route exact path="/" element={<Login />} />
+        <Route exact path="/" element={<Login onLogin={handleLogin} />} />
         <Route element={<Protected />}>
           <Route path="/albums/" element={<Albums />} />
         </Route>
