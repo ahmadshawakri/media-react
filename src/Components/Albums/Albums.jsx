@@ -1,6 +1,10 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { userContext } from "../../Context/UserContext";
+import Card from "../UI/Card";
+import Headers from "../UI/Headers";
+import AlbumData from "./AlbumData";
+import classes from "./Albums.module.css"
 
 const Albums = () => {
   const { userState } = useContext(userContext);
@@ -9,7 +13,6 @@ const Albums = () => {
     isLoaded: false,
   });
   const loggedUser = userState.userInfo;
-  // console.log(userState.userInfo);
 
   useEffect(() => {
     const loadAlbums = async () => {
@@ -17,7 +20,6 @@ const Albums = () => {
         `https://jsonplaceholder.typicode.com/users/${loggedUser.id}/albums`
       );
       if (albumsData.data.length !== 0) {
-        console.log(albumsData.data);
         setAlbumState({
           albums: albumsData.data,
           isLoaded: true,
@@ -29,15 +31,13 @@ const Albums = () => {
   }, []);
 
   return (
-    <>
-      <p>Hello</p>
+    <Card className={classes.card}>
+      <Headers head="Albums" />
       {albumState.isLoaded &&
         albumState.albums.map((album) => (
-          <div key={album.id}>
-            <p>{album.title}</p>
-          </div>
+          <AlbumData key={album.id} albumInfo={album} />
         ))}
-    </>
+    </Card>
   );
 };
 

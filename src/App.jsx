@@ -1,46 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import { userContext } from "./Context/UserContext";
 import Protected from "./ProtectedRoutes";
 import Login from "./Components/Login/Login";
 import Albums from "./Components/Albums/Albums";
-import { Route, Routes } from "react-router-dom";
+import Photos from "./Components/Photos/Photos";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 function App() {
-  const [userState, setUserState] = useState({
-    userInfo: [],
-    isLoggedIn: true,
-  });
+  const loc = useLocation();
 
-  useEffect(() => {
-    if (!userState.isLoggedIn) {
-      setUserFromLocalStorage();
+  const checkIfInLogin = () => {
+    if (loc.pathname === "/") {
+      localStorage.user = [];
+      localStorage.loggedStatues = false;
+      return true;
+    } else {
+      return false;
     }
-    console.log(`isLoggedIn: ${userState.isLoggedIn}`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const setUserFromLocalStorage = () => {
-    try {
-      const user = JSON.parse(localStorage.user);
-      const isLoggedIn = localStorage.isLoggedIn === "true";
-      setUserState({
-        userInfo: user,
-        isLoggedIn: isLoggedIn,
-      });
-    } catch (error) {}
   };
+
+  const [userState, setUserState] = useState({
+    userInfo: checkIfInLogin() ? [] : JSON.parse(localStorage.user),
+    isLoggedIn: checkIfInLogin() ? false : JSON.parse(localStorage.user),
+  });
 
   const handleLogin = async (user) => {
     localStorage.user = JSON.stringify(user);
-    localStorage.isLoggedIn = true;
-    console.log(user);
-    
-    await setUserState({
+    localStorage.loggedStatues = true;
+
+    setUserState({
       userInfo: user,
       isLoggedIn: true,
-    }); // await setUserFromLocalStorage();
-    // await console.log(`isLoggedIn: ${userState.isLoggedIn}`);
+    });
   };
 
   return (
@@ -49,6 +41,7 @@ function App() {
         <Route exact path="/" element={<Login onLogin={handleLogin} />} />
         <Route element={<Protected />}>
           <Route path="/albums/" element={<Albums />} />
+          <Route path="/photos/:id" element={<Photos />} />
         </Route>
       </Routes>
     </userContext.Provider>

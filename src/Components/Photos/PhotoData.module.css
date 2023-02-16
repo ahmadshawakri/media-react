@@ -1,0 +1,10 @@
+.photo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.photo img {
+  min-width: 25rem;
+  height: 25rem;
+}

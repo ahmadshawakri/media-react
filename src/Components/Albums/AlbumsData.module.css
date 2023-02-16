@@ -1,0 +1,21 @@
+.album {
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(202.17deg, #ff00d6 8.58%, #ff4d00 91.42%);
+  border: transparent;
+  border-radius: 1.25rem;
+  cursor: pointer;
+}
+
+.album:hover,
+.album:focus {
+  box-shadow: 0 0.5em 0.5em -0.4em #ff4d00;
+  transform: translateY(-0.25em);
+}
+
+.album p {
+  text-align: center;
+  font-family: "Roboto";
+  font-size: 1rem;
+  color: aliceblue;
+}
